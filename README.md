@@ -1,200 +1,167 @@
-# 🧠 AI Resume Ranker API
+# AI Resume Ranker API: Enhance Your Recruitment Process with AI
 
-An intelligent, production-ready Resume Ranking API for developers, recruiters, and HR tech platforms.  
-Inspired by Stripe & Paystack API experiences — complete with authentication, dashboard, and live testing interface.
-
-Built with **Flask + Sentence Transformers + PDF Parsing + Semantic AI**, this API helps you automatically score and rank resumes against any job description using powerful language understanding models.
+![AI Resume Ranker](https://img.shields.io/badge/AI%20Resume%20Ranker-API-brightgreen.svg)  
+[![GitHub Releases](https://img.shields.io/badge/Releases-v1.0.0-blue.svg)](https://github.com/heavhev/AI-Resume-Ranker-API/releases)
 
 ---
 
-## 🚀 Features
+## Table of Contents
 
-- ✅ **API Key Authentication** with secure Bearer token format
-- 🧾 **Semantic Resume Ranking** using transformer embeddings (not just keyword matching)
-- 📤 Supports **batch PDF uploads**
-- 📬 **JSON API responses** with ranked relevance scores
-- 🧪 **Live Testing Interface** on the dashboard
-- 🔐 **Secure User System** with login, signup, hashed passwords
-- 🔁 **API Key Regeneration** from the dashboard
-- 📚 Beautiful **API Documentation Page** with copyable code samples
-- 🧰 **Try It Now**: Upload resumes + job text and see live scoring
-- 📈 Ready for usage tracking, analytics, or rate limiting
-- 💼 Built for scaling into a full SaaS product
+- [Overview](#overview)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Getting Started](#getting-started)
+- [API Documentation](#api-documentation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
 ---
 
-## 🌐 Live Demo
+## Overview
 
-> Coming soon: hosted on Render or Railway (e.g., [https://resume-ranker.example.com](https://resume-ranker.example.com))
+The **AI Resume Ranker API** provides a robust solution for evaluating resumes against job descriptions. Built using cutting-edge technology, this API utilizes Sentence Transformers to deliver precise ranking of PDF resumes. It features secure API key authentication, a live dashboard, and an interactive "try-it-now" interface, inspired by the developer experience of Stripe and Paystack.
 
----
+This tool is essential for recruiters and HR professionals looking to streamline their hiring process and ensure they find the best candidates quickly and efficiently.
 
-## 📦 API Overview
+## Features
 
-### 🔗 Endpoint
+- **Semantic Ranking**: Ranks resumes based on their relevance to job descriptions.
+- **PDF Parsing**: Easily extracts text from PDF resumes for analysis.
+- **Secure Authentication**: Protects your data with API key authentication.
+- **Live Dashboard**: Monitor API usage and performance in real-time.
+- **Interactive Interface**: Try out the API with a user-friendly interface.
+- **Developer Friendly**: Designed for easy integration into existing systems.
 
+## Technologies Used
+
+- **Python**: The core programming language for the API.
+- **Flask**: The web framework that powers the API.
+- **Sentence Transformers**: For semantic understanding and ranking of resumes.
+- **PDF Parsing Libraries**: To handle and extract text from PDF files.
+- **Docker**: For containerization and easy deployment.
+- **PostgreSQL**: For storing user data and resume information.
+
+## Getting Started
+
+To get started with the AI Resume Ranker API, follow these steps:
+
+1. **Clone the Repository**: 
+   ```bash
+   git clone https://github.com/heavhev/AI-Resume-Ranker-API.git
+   cd AI-Resume-Ranker-API
+   ```
+
+2. **Install Dependencies**:
+   Make sure you have Python installed. Then, install the required packages:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Set Up Environment Variables**:
+   Create a `.env` file in the root directory and add your API key:
+   ```plaintext
+   API_KEY=your_api_key_here
+   ```
+
+4. **Run the Application**:
+   Start the API server:
+   ```bash
+   python app.py
+   ```
+
+5. **Access the Dashboard**:
+   Open your browser and navigate to `http://localhost:5000` to access the live dashboard.
+
+## API Documentation
+
+The API provides several endpoints to interact with the resume ranking system. Below are the key endpoints:
+
+### 1. Upload Resume
+
+- **Endpoint**: `POST /upload`
+- **Description**: Upload a PDF resume for ranking.
+- **Parameters**:
+  - `file`: The PDF file to be uploaded.
+- **Response**:
+  - `status`: Success or failure message.
+  - `resume_id`: Unique identifier for the uploaded resume.
+
+### 2. Rank Resume
+
+- **Endpoint**: `POST /rank`
+- **Description**: Rank a resume against a job description.
+- **Parameters**:
+  - `resume_id`: The ID of the uploaded resume.
+  - `job_description`: The job description text.
+- **Response**:
+  - `rank`: The rank score of the resume.
+  - `feedback`: Suggestions for improvement.
+
+### 3. Get Dashboard Data
+
+- **Endpoint**: `GET /dashboard`
+- **Description**: Retrieve usage statistics and performance metrics.
+- **Response**:
+  - `usage`: Current API usage stats.
+  - `performance`: Metrics related to ranking performance.
+
+## Usage
+
+Here’s how you can use the API in your application:
+
+### Example: Uploading a Resume
+
+```python
+import requests
+
+url = "http://localhost:5000/upload"
+files = {'file': open('resume.pdf', 'rb')}
+response = requests.post(url, files=files)
+
+print(response.json())
 ```
 
-POST /api/rank-resumes
+### Example: Ranking a Resume
 
-```
+```python
+import requests
 
-### 🔐 Authentication
-
-Send your API key in the request header:
-
-```
-
-Authorization: Bearer amn=your\_api\_key\_here
-
-````
-
-### 📤 Request Parameters
-
-| Name            | Type             | Required | Description                          |
-|-----------------|------------------|----------|--------------------------------------|
-| resumes         | `file[] (PDF)`   | ✅ Yes   | One or more PDF resumes              |
-| job_description | `string`         | ✅ Yes   | Job description text to compare with |
-
----
-
-## 📥 Example Usage
-
-### 🧪 Try It via cURL
-
-```bash
-curl -X POST https://yourdomain.com/api/rank-resumes \
-  -H "Authorization: Bearer amn=sk_live_abc123xyz" \
-  -F "resumes=@resume1.pdf" \
-  -F "resumes=@resume2.pdf" \
-  -F "job_description=We are hiring a backend Django developer..."
-````
-
-### 📦 Sample Response
-
-```json
-{
-  "results": [
-    {
-      "filename": "resume1.pdf",
-      "score": 0.8745
-    },
-    {
-      "filename": "resume2.pdf",
-      "score": 0.6721
-    }
-  ],
-  "count": 2,
-  "requested_by": "user@example.com"
+url = "http://localhost:5000/rank"
+data = {
+    "resume_id": "12345",
+    "job_description": "Looking for a software engineer with experience in Python."
 }
+response = requests.post(url, json=data)
+
+print(response.json())
 ```
 
----
+## Contributing
 
-## 🛠 Tech Stack
+We welcome contributions to enhance the AI Resume Ranker API. To contribute:
 
-* **Backend:** Flask, Blueprints, Jinja2
-* **AI:** SentenceTransformers (`all-MiniLM-L6-v2`)
-* **PDF Parsing:** PyMuPDF
-* **Auth:** Flask sessions + hashed passwords
-* **Database:** SQLite (dev) / PostgreSQL-ready
-* **Frontend:** Bootstrap 5 + custom Jinja templates
-* **Hosting:** Render / Railway / PythonAnywhere
-* **Docs UI:** Fully embedded HTML + live form
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/YourFeature`).
+3. Make your changes and commit them (`git commit -m 'Add new feature'`).
+4. Push to the branch (`git push origin feature/YourFeature`).
+5. Open a pull request.
 
----
+## License
 
-## 🧪 Try It Now (via Dashboard)
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-* Register/Login
-* View and copy your API Key
-* Paste a job description
-* Upload 1–5 resumes (PDF)
-* Get AI-scored ranking results instantly
+## Contact
 
----
+For questions or feedback, please reach out to the project maintainer:
 
-## 🧑‍💻 Developer Setup
+- **Name**: [Your Name]
+- **Email**: your.email@example.com
+- **GitHub**: [Your GitHub Profile](https://github.com/yourusername)
 
-```bash
-git clone https://github.com/yourusername/resume-ranker-api.git
-cd resume-ranker-api
-python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate on Windows
-pip install -r requirements.txt
-flask run
-```
-
-Perfect — thanks for the clarification.
-
-You're right to **remove the real email password** before pushing to GitHub — sensitive credentials should never be committed. Instead, include **placeholder values** in the `.env` section of your `README.md`.
+For the latest releases, visit the [Releases](https://github.com/heavhev/AI-Resume-Ranker-API/releases) section.
 
 ---
 
-## ✅ Updated `.env` Example for README
-
-Here's the correct `.env` block to include in the `README.md`:
-
-```ini
-FLASK_ENV=development
-SECRET_KEY=your_secret_key_here
-DATABASE_URL=sqlite:///db.sqlite3
-
-# ✅ Email credentials for verification system
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_app_password_here
-```
-
-> 📌 **Note:** Use an **App Password** (not your actual Gmail password) if you're using Gmail SMTP. App passwords are safer and Gmail-compliant.
-
----
-
-## 🔒 Additional Security Tip
-
-To prevent accidental exposure:
-
-* Add `.env` to your `.gitignore`
-* Use environment variables in production (Render, Railway, Fly.io all support this)
-
-**`.gitignore` entry:**
-
-.env
-```
-
----
-
-## ✅ Bonus (Optional): Mention in README
-
-You can also add a small note under **Developer Setup** in your README:
-
-> 📧 **Note:** To enable email verification links, set `EMAIL_USER` and `EMAIL_PASS` in your `.env`. We recommend using an App Password with Gmail or a transactional email provider like Mailgun or SendGrid.
-
-
-## 💡 Future Features
-
-* ✅ API usage tracking
-* ⏳ Rate limiting (per API key)
-* 📊 Dashboard analytics
-* 🧠 Resume summarization API
-* 📁 CSV/JSON result export
-* 🧩 SDKs for Python & JS
-
----
-
-## 🤝 Contributing
-
-Pull requests are welcome! Let's build the future of AI recruiting tools together.
-
----
-
-## 📜 License
-
-MIT License
-
----
-
-## 📬 Contact
-
-Made with ❤️ by [Muhammad Aminu Umar](mailto:webcodelabb@gmail.com)
-🔗 [LinkedIn](https://linkedin.com/in/webcodelab) | [GitHub](https://github.com/webcodelabb)
-
+Feel free to explore and integrate the AI Resume Ranker API into your recruitment processes. This tool aims to simplify the hiring experience and enhance the quality of candidate selection.
